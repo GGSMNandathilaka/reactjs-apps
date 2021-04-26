@@ -2,14 +2,29 @@ import React, { Component } from "react";
 
 class Counter extends Component {
   state = {
-    count: 0,
+    value: this.props.value,
     tags: [],
   };
 
-  // constructor() {
-  //     super();
-  //     this.handleIncrement = this.handleIncrement.bind(this);
-  // }
+  render() {
+    return (
+      <div>
+        <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+        <button
+          onClick={() => this.handleIncrement()}
+          className="btn btn-secondary btn-sm m-2"
+        >
+          Increment
+        </button>
+        <button
+          onClick={this.handleDecrement}
+          className="btn btn-secondary btn-sm m-2"
+        >
+          Decrement
+        </button>
+      </div>
+    );
+  }
 
   renderTags() {
     if (this.state.tags.length === 0) return <p>There are no tags !!!</p>;
@@ -26,41 +41,21 @@ class Counter extends Component {
 
   handleIncrement = (product) => {
     console.log("product-id", product);
-    this.setState({ count: this.state.count + 1 });
+    this.setState({ value: this.state.value + 1 });
   };
 
   handleDecrement = () => {
-    this.setState({ count: this.state.count - 1 });
+    this.setState({ value: this.state.value - 1 });
   };
-
-  render() {
-    return (
-      <div>
-        <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
-        <button
-          onClick={() => this.handleIncrement(product)}
-          className="btn btn-secondary btn-sm m-2"
-        >
-          Increment
-        </button>
-        <button
-          onClick={this.handleDecrement}
-          className="btn btn-secondary btn-sm m-2"
-        >
-          Decrement
-        </button>
-      </div>
-    );
-  }
 
   getBadgeClasses() {
     let classes = "badge m-2 badge-";
-    classes += this.state.count === 0 ? "warning" : "primary";
+    classes += this.state.value === 0 ? "warning" : "primary";
     return classes;
   }
 
   formatCount() {
-    const { count } = this.state;
+    const { value: count } = this.state;
     return count === 0 ? "Zero" : count;
   }
 }
