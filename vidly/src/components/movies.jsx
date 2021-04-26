@@ -7,7 +7,7 @@ class Movies extends Component {
   };
 
   render() {
-    return <main className="container">{this.getMovieCountText()}</main>;
+    return <main className="container">{this.getMovieContent()}</main>;
   }
 
   getMovieContent() {
@@ -59,8 +59,8 @@ class Movies extends Component {
   }
 
   handleDeleteMovies = (id) => {
-    deleteMovie(id);
-    this.setState({ movies: getMovies() });
+    const movies = this.state.movies.filter((movie) => movie._id !== id);
+    this.setState({ movies });
   };
 }
 export default Movies;
