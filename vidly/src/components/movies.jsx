@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { getMovies, deleteMovie } from "../services/fakeMovieService";
 import Like from "./common/like";
+import Paginator from "./common/paginator";
 
 class Movies extends Component {
   state = {
     movies: getMovies(),
+    pageId: 1,
+    limit: 4,
   };
 
   constructor() {
@@ -24,6 +27,10 @@ class Movies extends Component {
     movies[index] = { ...movie };
     movies[index].liked = !movie.liked;
     this.setState({ movies });
+  };
+
+  handlePageClicked = (pageId) => {
+    this.setState({ pageId });
   };
 
   render() {
@@ -49,16 +56,27 @@ class Movies extends Component {
           </thead>
           <tbody>{this.getBodyItems()}</tbody>
         </table>
+        <Paginator
+          items={this.state.movies}
+          limit={this.state.limit}
+          pageId={this.state.pageId}
+          onPageClicked={this.handlePageClicked}
+        />
       </React.Fragment>
     );
   }
 
   getBodyItems() {
-    const { movies } = this.state;
-    if (movies && movies.length > 0) {
+    const { movies, pageId, limit } = this.state;
+    const displayedMovies = [...movies].slice(
+      (pageId - 1) * limit,
+      pageId * limit
+    );
+
+    if (displayedMovies && displayedMovies.length > 0) {
       return (
         <React.Fragment>
-          {movies.map((movie) => (
+          {displayedMovies.map((movie) => (
             <tr key={movie._id}>
               <td>{movie.title}</td>
               <td>{movie.genre.name}</td>
