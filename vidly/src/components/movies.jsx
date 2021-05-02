@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { getMovies, deleteMovie } from "../services/fakeMovieService";
-import LikeComponent from "./like-component";
+import Like from "./like";
 
 class Movies extends Component {
   state = {
@@ -9,8 +9,8 @@ class Movies extends Component {
 
   constructor() {
     super();
-    const movies = this.state.movies.map((m) => (m.liked = false));
-    this.setState({ movies });
+    // const movies = this.state.movies.map((m) => (m.liked = false));
+    // this.setState({ movies });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -65,9 +65,9 @@ class Movies extends Component {
               <td>{movie.numberInStock}</td>
               <td>{movie.dailyRentalRate}</td>
               <td>
-                <LikeComponent
+                <Like
                   liked={movie.liked}
-                  onLike={this.handleLike}
+                  onLike={() => this.handleLike(movie)}
                   movie={movie}
                 />
               </td>
