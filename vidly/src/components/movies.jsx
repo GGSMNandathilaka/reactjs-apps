@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { getMovies, deleteMovie } from "../services/fakeMovieService";
+import { paginate } from "../utils/paginate";
 import Like from "./common/like";
 import Paginator from "./common/paginator";
 
 class Movies extends Component {
   state = {
     movies: getMovies(),
-    pageId: 1,
+    currentPage: 1,
     limit: 4,
   };
 
@@ -29,8 +30,8 @@ class Movies extends Component {
     this.setState({ movies });
   };
 
-  handlePageClicked = (pageId) => {
-    this.setState({ pageId });
+  handlePageClicked = (currentPage) => {
+    this.setState({ currentPage });
   };
 
   render() {
@@ -57,9 +58,9 @@ class Movies extends Component {
           <tbody>{this.getBodyItems()}</tbody>
         </table>
         <Paginator
-          items={this.state.movies}
+          itemsCount={this.state.movies.length}
           limit={this.state.limit}
-          pageId={this.state.pageId}
+          currentPage={this.state.currentPage}
           onPageClicked={this.handlePageClicked}
         />
       </React.Fragment>
@@ -67,11 +68,8 @@ class Movies extends Component {
   }
 
   getBodyItems() {
-    const { movies, pageId, limit } = this.state;
-    const displayedMovies = [...movies].slice(
-      (pageId - 1) * limit,
-      pageId * limit
-    );
+    const { movies, currentPage, limit } = this.state;
+    const displayedMovies = paginate(movies, currentPage, limit);
 
     if (displayedMovies && displayedMovies.length > 0) {
       return (
