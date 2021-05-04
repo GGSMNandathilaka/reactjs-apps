@@ -8,23 +8,23 @@ import Paginator from "./common/paginator";
 
 class Movies extends Component {
   state = {
-    movies: getMovies(),
-    genres: getGenres(),
     currentPage: 1,
     limit: 4,
     currentGenre: "all_genres",
+    movies: [],
+    genres: [],
   };
 
   constructor() {
     super();
-    // const movies = this.state.movies.map((m) => (m.liked = false));
-    // this.setState({ movies });
-
-    // push 'All Genres' option to loaded genres list
-    this.state.genres.unshift({ _id: "all_genres", name: "All Genres" });
   }
 
   componentDidUpdate(prevProps, prevState) {}
+
+  componentDidMount() {
+    const genres = [{ _id: "all_genres", name: "All Genres" }, ...getGenres()];
+    this.setState({ movies: getMovies(), genres });
+  }
 
   handleLike = (movie) => {
     const movies = [...this.state.movies];
@@ -39,19 +39,17 @@ class Movies extends Component {
   };
 
   handleGenreSelected = (currentGenre) => {
-    this.setState({ currentGenre });
+    this.setState({ currentGenre, currentPage: 1 });
   };
 
   render() {
     const { movies, currentPage, limit, currentGenre } = this.state;
 
-    let filteredMovies = [];
+    let filteredMovies =
+      currentGenre && currentGenre !== "all_genres"
+        ? movies.filter((m) => m.genre._id === currentGenre)
+        : movies;
 
-    if (currentGenre === "all_genres") {
-      filteredMovies = movies;
-    } else {
-      filteredMovies = movies.filter((m) => m.genre._id === currentGenre);
-    }
     const displayedMovies = paginate(filteredMovies, currentPage, limit);
 
     if (this.state.movies && this.state.movies.length === 0)
@@ -67,7 +65,7 @@ class Movies extends Component {
             />
           </div>
           <div className="col-10">
-            <p>Showing {this.state.movies.length} movies in the database</p>
+            <p>Showing {filteredMovies.length} movies in the database</p>
             <table className="table">
               <thead>
                 <tr>
