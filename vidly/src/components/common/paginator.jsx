@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import _ from "lodash";
 import PropTypes from "prop-types";
 
@@ -16,9 +16,9 @@ const Paginator = (props) => {
             key={p}
             className={p === currentPage ? "page-item active" : "page-item"}
           >
-            <a onClick={() => onPageClicked(p)} className="page-link" href="#">
+            <span onClick={() => onPageClicked(p)} className="page-link">
               {p}
-            </a>
+            </span>
           </li>
         ))}
       </ul>

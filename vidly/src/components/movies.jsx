@@ -5,19 +5,17 @@ import { paginate } from "../utils/paginate";
 import ListGroup from "./common/list-group";
 import Paginator from "./common/paginator";
 import MoviesTable from "./moviesTable";
+import _ from "lodash";
 
 class Movies extends Component {
   state = {
     currentPage: 1,
     limit: 4,
     currentGenre: "all_genres",
+    sortColumn: { path: "title", order: "asc" },
     movies: [],
     genres: [],
   };
-
-  constructor() {
-    super();
-  }
 
   componentDidUpdate(prevProps, prevState) {}
 
@@ -42,25 +40,42 @@ class Movies extends Component {
     this.setState({ currentGenre, currentPage: 1 });
   };
 
+  handleSort = (sortColumn) => {
+    this.setState({ sortColumn });
+  };
+
   render() {
-    const { movies, currentPage, limit, currentGenre } = this.state;
+    const {
+      movies,
+      currentPage,
+      limit,
+      currentGenre,
+      sortColumn,
+      genres,
+    } = this.state;
 
     let filteredMovies =
       currentGenre && currentGenre !== "all_genres"
         ? movies.filter((m) => m.genre._id === currentGenre)
         : movies;
 
-    const displayedMovies = paginate(filteredMovies, currentPage, limit);
+    let sortedList = _.orderBy(
+      filteredMovies,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
 
-    if (this.state.movies && this.state.movies.length === 0)
+    const displayedMovies = paginate(sortedList, currentPage, limit);
+
+    if (movies && movies.length === 0)
       return <p>There are no movies in the database</p>;
     return (
       <main className="container">
         <div className="row">
           <div className="col-3">
             <ListGroup
-              genres={this.state.genres}
-              currentGenre={this.state.currentGenre}
+              genres={genres}
+              currentGenre={currentGenre}
               onGenreSelected={this.handleGenreSelected}
             />
           </div>
@@ -69,12 +84,14 @@ class Movies extends Component {
             <MoviesTable
               movies={displayedMovies}
               onLike={this.handleLike}
+              sortColumn={sortColumn}
               onDelete={this.handleDeleteMovies}
+              onSort={this.handleSort}
             />
             <Paginator
               itemsCount={filteredMovies.length}
-              limit={this.state.limit}
-              currentPage={this.state.currentPage}
+              limit={limit}
+              currentPage={currentPage}
               onPageClicked={this.handlePageClicked}
             />
           </div>
