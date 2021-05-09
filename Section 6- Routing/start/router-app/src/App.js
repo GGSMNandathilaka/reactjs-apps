@@ -7,7 +7,7 @@ import Dashboard from "./components/admin/dashboard";
 import ProductDetails from "./components/productDetails";
 import NotFound from "./components/notFound";
 import "./App.css";
-import { Route } from "react-router";
+import { Route, Switch } from "react-router";
 
 class App extends Component {
   render() {
@@ -15,10 +15,12 @@ class App extends Component {
       <div>
         <NavBar />
         <div className="content">
-          <Route path="/products" component={Products}></Route>
-          <Route path="/posts" component={Posts}></Route>
-          <Route path="/admin" component={Dashboard}></Route>
-          <Route path="" component={Home}></Route>
+          <Switch>
+            <Route path="/products" component={Products}></Route>
+            <Route path="/posts" component={Posts}></Route>
+            <Route path="/admin" component={Dashboard}></Route>
+            <Route path="" component={Home}></Route>
+          </Switch>
         </div>
       </div>
     );
