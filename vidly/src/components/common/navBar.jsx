@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 class NavBar extends Component {
   state = {};
@@ -7,9 +7,9 @@ class NavBar extends Component {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <NavLink className="navbar-brand" to="/movies">
+          <Link className="navbar-brand" to="/movies">
             Vidly
-          </NavLink>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
