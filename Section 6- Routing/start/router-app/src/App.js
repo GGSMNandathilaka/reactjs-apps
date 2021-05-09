@@ -5,8 +5,9 @@ import Posts from "./components/posts";
 import Home from "./components/home";
 import Dashboard from "./components/admin/dashboard";
 import ProductDetails from "./components/productDetails";
+import NotFound from "./components/notFound";
 import "./App.css";
-import { Route, Switch } from "react-router";
+import { Redirect, Route, Switch } from "react-router";
 
 class App extends Component {
   render() {
@@ -20,9 +21,12 @@ class App extends Component {
               path="/products"
               render={(props) => <Products sortBy="newest" {...props} />}
             ></Route>
-            <Route path="/posts" component={Posts}></Route>
+            <Route path="/posts/:year?/:month?" component={Posts}></Route>
+            <Redirect from="/messages" to="/posts"></Redirect>
             <Route path="/admin" component={Dashboard}></Route>
-            <Route path="" component={Home}></Route>
+            <Route path="/not-found" component={NotFound}></Route>
+            <Route path="/" exact component={Home}></Route>
+            <Redirect to="/not-found" />
           </Switch>
         </div>
       </div>
