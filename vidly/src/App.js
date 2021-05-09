@@ -1,4 +1,3 @@
-import "./App.css";
 import { Switch, Route, Redirect } from "react-router";
 import NavBar from "./components/common/navBar";
 import Movies from "./components/movies";
@@ -7,6 +6,7 @@ import Rentals from "./components/rentals";
 import PageNotFound from "./components/common/pageNotFound";
 import MovieDetail from "./components/movieDetail";
 import React from "react";
+import "./App.css";
 
 function App() {
   return (
