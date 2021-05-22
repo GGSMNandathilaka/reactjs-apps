@@ -7,6 +7,14 @@ on:
   push:
     branches: [ master ]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      job_name:
+        description: 'Run Job'
+        required: true
+        default: 'build_deploy'
+  
 jobs:
   build:
 
