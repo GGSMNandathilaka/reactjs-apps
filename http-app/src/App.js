@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import http from "./services/httpService";
+import config from "./config.json";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-
-const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
 
 class App extends Component {
   state = {
@@ -10,20 +11,20 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const { data: posts } = await axios.get(apiEndpoint);
+    const { data: posts } = await http.get(config.apiEndpoint);
     this.setState({ posts });
   }
 
   handleAdd = async () => {
     const obj = { title: "a", body: "b" };
-    const { data: post } = await axios.post(apiEndpoint, obj);
+    const { data: post } = await http.post(config.apiEndpoint, obj);
     const posts = [post, ...this.state.posts];
     this.setState({ posts });
   };
 
   handleUpdate = async (post) => {
     post.title = "UPDATED";
-    const { data } = await axios.put(`${apiEndpoint}/${post.id}`, post);
+    const { data } = await http.put(`${config.apiEndpoint}/${post.id}`, post);
     const posts = [...this.state.posts];
 
     const index = posts.indexOf(data.id);
@@ -33,15 +34,25 @@ class App extends Component {
   };
 
   handleDelete = async (post) => {
-    await axios.delete(`${apiEndpoint}/${post.id}`);
+    const originalPosts = this.state.posts;
 
     const posts = this.state.posts.filter((p) => p.id !== post.id);
     this.setState({ posts });
+
+    try {
+      await http.delete(`${config.apiEndpointFake}/${post.id}`);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        // expected error
+        alert("This post has already been deleted !!!");
+      this.setState({ posts: originalPosts });
+    }
   };
 
   render() {
     return (
       <React.Fragment>
+        <ToastContainer />
         <button className="btn btn-primary" onClick={this.handleAdd}>
           Add
         </button>
